@@ -4,46 +4,72 @@ export const bookSeat = async (req, res) => {
   const conn = await pool.connect();
 
   try {
-    const seatId = req.params.id;
+    const { movieId, seatId } = req.params;
     const user = req.user;
 
     await conn.query("BEGIN");
 
+    // Validate seat belongs to movie
     const result = await conn.query(
-      "SELECT * FROM seats WHERE id = $1 AND isbooked = 0 FOR UPDATE",
-      [seatId]
+      `SELECT * FROM seats 
+       WHERE id = $1 AND movie_id = $2 AND isbooked = 0 
+       FOR UPDATE`,
+      [seatId, movieId]
     );
 
     if (result.rowCount === 0) {
       await conn.query("ROLLBACK");
       conn.release();
-      return res.send({ error: "Seat already booked" });
+      return res.send({ error: "Seat not available for this movie" });
     }
 
     const seat = result.rows[0];
 
-    // update seat
     await conn.query(
       "UPDATE seats SET isbooked = 1, booked_by = $2 WHERE id = $1",
       [seatId, user.id]
     );
 
-    // insert booking record
     await conn.query(
       "INSERT INTO bookings (user_id, movie_id, seat_id) VALUES ($1, $2, $3)",
-      [user.id, seat.movie_id, seatId]
+      [user.id, movieId, seatId]
     );
 
     await conn.query("COMMIT");
     conn.release();
 
-    res.status(201).send("Seat booked successfully");
+    res.send({ message: "Seat booked successfully" });
 
   } catch (err) {
     await conn.query("ROLLBACK");
     conn.release();
     console.log(err);
     res.status(500).send("Booking failed");
+  }
+};
+
+export const getMyBookings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const result = await pool.query(
+      `SELECT 
+        b.id,
+        m.name AS movie_name,
+        s.seat_number,
+        b.created_at
+      FROM bookings b
+      JOIN movies m ON b.movie_id = m.id
+      JOIN seats s ON b.seat_id = s.id
+      WHERE b.user_id = $1
+      ORDER BY b.created_at DESC`,
+      [userId]
+    );
+
+    res.send(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching bookings");
   }
 };
 
