@@ -11,6 +11,8 @@ import pg from "pg";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,10 +32,66 @@ const pool = new pg.Pool({
 
 const app = new express();
 app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
+
+app.post("/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await pool.query(
+      "INSERT INTO users (email, password) VALUES ($1, $2)",
+      [email, hashedPassword]
+    );
+
+    res.send({ message: "User registered successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error registering user");
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+
+    if (result.rowCount === 0) {
+      return res.send({ error: "User not found" });
+    }
+
+    const user = result.rows[0];
+
+    // compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.send({ error: "Invalid password" });
+    }
+
+    // generate token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      "secret"
+    );
+
+    res.send({ token });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error logging in");
+  }
+});
+
 //get all seats
 app.get("/seats", async (req, res) => {
   const result = await pool.query("select * from seats"); // equivalent to Seats.find() in mongoose
