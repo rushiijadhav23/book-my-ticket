@@ -48,6 +48,10 @@ A simple **movie seat booking** app:
 
 Create a `.env` file (see `.env.example`):
 
+
+
+For Render, prefer `DATABASE_URL` and set `DB_SSL=true`.
+
 ## Run with Docker
 
 ```bash

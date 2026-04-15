@@ -7,16 +7,41 @@
 // SELECT 0 FROM generate_series(1, 20);
 import pg from "pg";
 
-// Equivalent to mongoose connection
-// Pool is nothing but group of connections
-// If you pick one connection out of the pool and release it
-// the pooler will keep that connection open for sometime to other clients to reuse
-const pool = new pg.Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
+function getValidDatabaseUrl() {
+  const raw = process.env.DATABASE_URL?.trim();
+  if (!raw) return null;
+
+  // Ignore template/example values copied into local .env.
+  if (raw.includes("<") || raw.includes(">")) return null;
+
+  try {
+    new URL(raw);
+    return raw;
+  } catch {
+    return null;
+  }
+}
+
+const databaseUrl = getValidDatabaseUrl();
+const useConnectionString = Boolean(databaseUrl);
+const enableSsl =
+  process.env.DB_SSL === "true" ||
+  (process.env.NODE_ENV === "production" && useConnectionString);
+
+const poolConfig = useConnectionString
+  ? {
+      connectionString: databaseUrl,
+      ssl: enableSsl ? { rejectUnauthorized: false } : false,
+    }
+  : {
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT || 5432),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
+    };
+
+const pool = new pg.Pool(poolConfig);
 
 export default pool;
