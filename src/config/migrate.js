@@ -46,7 +46,7 @@ export async function migrate() {
   await pool.query(`
     INSERT INTO public.movies (name)
     SELECT seed.name
-    FROM (VALUES ('Interstellar'), ('Inception'), ('The Dark Knight')) AS seed(name)
+    FROM (VALUES ('Interstellar'), ('Inception'), ('The Dark Knight'), ('Dhurandhar-The Revenge'), ('Spider-Man: Brand New Day')) AS seed(name)
     WHERE NOT EXISTS (SELECT 1 FROM public.movies);
   `);
 
@@ -59,4 +59,3 @@ export async function migrate() {
     WHERE NOT EXISTS (SELECT 1 FROM public.seats);
   `);
 }
-
