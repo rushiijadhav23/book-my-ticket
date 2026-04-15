@@ -1,11 +1,23 @@
 # Book My Ticket
 
+BookMyTickets is a full-stack movie seat booking app that solves the problem of managing seat reservations without double-booking conflicts.
+
+It lets users register/login, browse movies, view seat layouts, book available seats, and see their booking history. The backend is built with Node.js + Express and PostgreSQL; booking uses a DB transaction with row-level locking (FOR UPDATE) so two users can’t book the same seat at once. The frontend is a lightweight vanilla JS UI served from the same app, and the system includes startup migrations plus health endpoints for reliable deployment (e.g., on Render).
+
 A simple **movie seat booking** app:
 
 - **Backend**: Node.js + Express (REST API)
 - **DB**: PostgreSQL
 - **Auth**: Email + password (bcrypt) + JWT
 - **Frontend**: Static `public/` (Vanilla JS + Tailwind CDN)
+
+## Video demo
+
+https://youtu.be/toI6O_yxVBs
+
+## Live demo
+
+https://book-my-ticket.onrender.com/
 
 ## Tech stack
 
