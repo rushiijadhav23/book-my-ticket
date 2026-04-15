@@ -3,6 +3,7 @@ import cors from "cors";
 
 import authRoutes from "./src/routes/authRoutes.js";
 import bookingRoutes from "./src/routes/bookingRoutes.js";
+import movieRoutes from "./src/routes/movieRoutes.js";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 // routes
 app.use("/", authRoutes);
 app.use("/", bookingRoutes);
+app.use("/", movieRoutes);
 
 app.get("/", (req, res) => {
   res.send("API running...");
