@@ -6,6 +6,7 @@ dotenv.config();
 import authRoutes from "./src/routes/authRoutes.js";
 import bookingRoutes from "./src/routes/bookingRoutes.js";
 import movieRoutes from "./src/routes/movieRoutes.js";
+import { migrate } from "./src/config/migrate.js";
 
 const app = express();
 
@@ -22,6 +23,16 @@ app.get("/", (req, res) => {
   res.send("API running...");
 });
 
-app.listen(8080, () => {
-  console.log("Server running on port http://localhost:8080");
+const port = Number(process.env.PORT) || 8080;
+
+try {
+  await migrate();
+  console.log("Database migrations applied");
+} catch (err) {
+  console.error("Failed to run migrations", err);
+  process.exit(1);
+}
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port http://localhost:${port}`);
 });

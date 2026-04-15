@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChaiCode Cinema</title>
 
-```
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -17,66 +16,171 @@
     background-color: #0f172a;
     color: #f8fafc;
   }
+
+  /* Hide number spinners where used */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 </style>
-```
 
   </head>
 
   <body class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
 
-```
-<div class="max-w-6xl w-full bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl p-10 border border-slate-700/50">
+<div class="max-w-6xl w-full bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-slate-700/50">
 
   <!-- HEADER -->
   <div class="text-center mb-8">
-    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-4">
-      🎬 ChaiCode Cinema
+    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-3">
+      ChaiCode Cinema
     </h1>
-    <p class="text-slate-400">Login → Select Movie → Book Seats</p>
+    <p class="text-slate-400">Login → Select a movie → Book a seat</p>
   </div>
 
-  <!-- AUTH SECTION -->
-  <div class="text-center mb-6">
-    <input id="email" placeholder="Email" class="p-2 m-2 rounded text-black" />
-    <input id="password" type="password" placeholder="Password" class="p-2 m-2 rounded text-black" />
-    <br />
-    <button onclick="register()" class="bg-blue-500 px-4 py-2 rounded m-2">Register</button>
-    <button onclick="login()" class="bg-green-500 px-4 py-2 rounded m-2">Login</button>
+  <!-- TOP BAR -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+    <div id="userBadge" class="text-slate-300">
+      <span class="text-slate-400">Status:</span>
+      <span id="authStatus" class="font-semibold">Logged out</span>
+      <span id="welcomeName" class="hidden"></span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="myBookingsBtn" class="hidden bg-yellow-500/90 hover:bg-yellow-500 text-slate-950 px-4 py-2 rounded-xl font-semibold transition">
+        My bookings
+      </button>
+      <button id="logoutBtn" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl font-semibold transition">
+        Logout
+      </button>
+    </div>
   </div>
 
-  <button onclick="loadMyBookings()" class="bg-yellow-500 px-4 py-2 rounded m-2">
-    My Bookings
-  </button>
-
-  <div id="bookings" class="text-center mt-6"></div>
-
-  <!-- MOVIES -->
-  <div id="movies" class="text-center mb-8"></div>
-
-  <!-- LEGEND -->
-  <div class="flex justify-center mb-8">
-    <div class="bg-slate-900/50 rounded-full px-6 py-3 border border-slate-700 flex gap-8 items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-4 h-4 rounded-full bg-emerald-500"></div>
-        <span class="text-slate-300">Available</span>
+  <!-- AUTH CARD (single panel with toggle) -->
+  <div id="authCard" class="mb-8 max-w-xl mx-auto">
+    <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-6">
+      <!-- SIGN IN -->
+      <div id="signInPanel">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold">Sign in</h2>
+          <span class="text-xs text-slate-400">Email + password</span>
+        </div>
+        <div class="grid gap-3">
+          <input id="loginEmail" placeholder="Email" class="w-full p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <input id="loginPassword" type="password" placeholder="Password" class="w-full p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <button id="loginBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
+            Login
+          </button>
+        </div>
+        <div class="mt-4 text-sm text-slate-300">
+          New here?
+          <button id="showRegisterBtn" class="text-cyan-300 hover:text-cyan-200 font-semibold underline underline-offset-4">
+            Create an account
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-3">
-        <div class="w-4 h-4 rounded-full bg-rose-500/40"></div>
-        <span class="text-slate-300">Booked</span>
+
+      <!-- REGISTER -->
+      <div id="registerPanel" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold">Create account</h2>
+          <span class="text-xs text-slate-400">First/last name + email</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="firstName" placeholder="First name" class="p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <input id="lastName" placeholder="Last name" class="p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <input id="registerEmail" placeholder="Email" class="sm:col-span-2 p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <input id="registerPassword" type="password" placeholder="Password" class="sm:col-span-2 p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
+          <button id="registerBtn" class="sm:col-span-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
+            Register
+          </button>
+        </div>
+        <div class="mt-4 text-sm text-slate-300 flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span>Already have an account?</span>
+          <button id="showSignInBtn" class="text-emerald-300 hover:text-emerald-200 font-semibold underline underline-offset-4">
+            Back to sign in
+          </button>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">You’ll sign in using email + password.</p>
       </div>
     </div>
   </div>
 
-  <!-- SEATS -->
-  <div class="flex justify-center">
-    <table id="tbl" class="border-separate border-spacing-4"></table>
+  <!-- CONTENT -->
+  <div id="app" class="hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+        <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold">Movies</h3>
+            <span id="moviesMeta" class="text-xs text-slate-400"></span>
+          </div>
+          <div id="movies" class="flex flex-wrap gap-2"></div>
+          <p id="movieHint" class="text-sm text-slate-400 mt-4">Pick a movie to view available seats.</p>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-6 mt-6">
+          <h3 class="text-lg font-semibold mb-3">Legend</h3>
+          <div class="grid grid-cols-1 gap-2 text-sm text-slate-300">
+            <div class="flex items-center gap-3">
+              <div class="w-4 h-4 rounded-full bg-emerald-400"></div>
+              <span>Available</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-4 h-4 rounded-full bg-rose-500/50"></div>
+              <span>Booked</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-4 h-4 rounded-full bg-slate-500"></div>
+              <span>Selected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-6">
+          <div class="flex items-start sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h3 class="text-lg font-semibold">Seats</h3>
+              <p id="seatSub" class="text-sm text-slate-400">Select a movie to load seats.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="refreshSeatsBtn" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-sm font-semibold transition">
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div id="seatGridWrap" class="min-h-[220px]">
+            <div id="seatGrid" class="grid grid-cols-8 gap-2"></div>
+            <div id="seatEmpty" class="text-slate-400 text-sm py-10 text-center">No movie selected.</div>
+            <div id="seatLoading" class="hidden text-slate-400 text-sm py-10 text-center">Loading seats…</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-6 mt-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold">My bookings</h3>
+            <span id="bookingsMeta" class="text-xs text-slate-400"></span>
+          </div>
+          <div id="bookings" class="grid gap-2"></div>
+          <div id="bookingsEmpty" class="text-slate-400 text-sm py-4">No bookings yet.</div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- TOASTS -->
+  <div id="toastHost" class="fixed bottom-6 right-6 z-50 space-y-2"></div>
 
 </div>
 
 <!-- MAIN JS (ENTRY POINT) -->
 <script type="module" src="./js/main.js"></script>
-```
 
   </body>
 </html>

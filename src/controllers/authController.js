@@ -4,13 +4,13 @@ import pool from "../config/db.js";
 
 export const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2)",
-      [email, hashedPassword]
+      "INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4)",
+      [email, hashedPassword, firstName ?? null, lastName ?? null]
     );
 
     res.send({ message: "User registered successfully" });
@@ -46,7 +46,15 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.send({ token });
+    res.send({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name ?? null,
+        lastName: user.last_name ?? null,
+      },
+    });
   } catch (err) {
     console.log(err);
     res.status(500).send("Error logging in");

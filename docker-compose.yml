@@ -13,18 +13,20 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
 
   backend:
     build: .
     container_name: bookmyticket-backend
     restart: always
     ports:
-      - "${PORT}:${PORT}"
+      - "${PORT:-8080}:8080"
     depends_on:
       - postgres
     env_file:
       - .env
     environment:
+      PORT: ${PORT}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
