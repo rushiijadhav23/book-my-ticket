@@ -34,6 +34,26 @@ const app = new express();
 app.use(cors());
 app.use(express.json());
 
+// added authmiddleware
+const authMiddleware = (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+
+    if (!token) {
+      return res.status(401).send({ error: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, "secret");
+
+    // attach user info to request
+    req.user = decoded;
+
+    next();
+  } catch (err) {
+    return res.status(401).send({ error: "Invalid token" });
+  }
+};
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
@@ -100,10 +120,10 @@ app.get("/seats", async (req, res) => {
 
 //book a seat give the seatId and your name
 
-app.put("/:id/:name", async (req, res) => {
+app.put("/book/:id", authMiddleware, async (req, res) => {
   try {
     const id = req.params.id;
-    const name = req.params.name;
+    const user = req.user; // comes from JWT
     // payment integration should be here
     // verify payment
     const conn = await pool.connect(); // pick a connection from the pool
@@ -126,15 +146,15 @@ app.put("/:id/:name", async (req, res) => {
     }
     //if we get the row, we are safe to update
     const sqlU = "update seats set isbooked = 1, name = $2 where id = $1";
-    const updateResult = await conn.query(sqlU, [id, name]); // Again to avoid SQL INJECTION we are using $1 and $2 as placeholders
+    const updateResult = await conn.query(sqlU, [id, user.email]); // Again to avoid SQL INJECTION we are using $1 and $2 as placeholders
 
     //end transaction by committing
     await conn.query("COMMIT");
     conn.release(); // release the connection back to the pool (so we do not keep the connection open unnecessarily)
-    res.send(updateResult);
+    res.send({message: "Seat Booked Successfully"});
   } catch (ex) {
     console.log(ex);
-    res.send(500);
+    res.status(500).send("Booking Failed");
   }
 });
 
