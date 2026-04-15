@@ -1,18 +1,21 @@
-<!doctype html>
+<!doctype html
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChaiCode Cinema</title>
+    <title>BookMyTickets.com</title>
+    add favicon
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍵</text></svg>">
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap");
+  @import url('https://fonts.googleapis.com/css2?family=Iansui&display=swap');
+
   body {
-    font-family: "Outfit", sans-serif;
+    font-family: "Iansui", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     background-color: #0f172a;
     color: #f8fafc;
   }
@@ -30,14 +33,14 @@
 
   </head>
 
-  <body class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+  <body class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-rose-950 via-slate-900 to-fuchsia-950">
 
 <div class="max-w-6xl w-full bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-slate-700/50">
 
   <!-- HEADER -->
   <div class="text-center mb-8">
-    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-3">
-      ChaiCode Cinema
+    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-fuchsia-400 mb-3">
+      BookMyTickets.com
     </h1>
     <p class="text-slate-400">Login → Select a movie → Book a seat</p>
   </div>
@@ -50,7 +53,7 @@
       <span id="welcomeName" class="hidden"></span>
     </div>
     <div class="flex items-center gap-2">
-      <button id="myBookingsBtn" class="hidden bg-yellow-500/90 hover:bg-yellow-500 text-slate-950 px-4 py-2 rounded-xl font-semibold transition">
+      <button id="myBookingsBtn" class="hidden bg-pink-500/90 hover:bg-pink-500 text-slate-950 px-4 py-2 rounded-xl font-semibold transition">
         My bookings
       </button>
       <button id="logoutBtn" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl font-semibold transition">
@@ -71,13 +74,13 @@
         <div class="grid gap-3">
           <input id="loginEmail" placeholder="Email" class="w-full p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
           <input id="loginPassword" type="password" placeholder="Password" class="w-full p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
-          <button id="loginBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
+          <button id="loginBtn" class="bg-rose-500 hover:bg-rose-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
             Login
           </button>
         </div>
         <div class="mt-4 text-sm text-slate-300">
           New here?
-          <button id="showRegisterBtn" class="text-cyan-300 hover:text-cyan-200 font-semibold underline underline-offset-4">
+          <button id="showRegisterBtn" class="text-pink-300 hover:text-pink-200 font-semibold underline underline-offset-4">
             Create an account
           </button>
         </div>
@@ -94,13 +97,13 @@
           <input id="lastName" placeholder="Last name" class="p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
           <input id="registerEmail" placeholder="Email" class="sm:col-span-2 p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
           <input id="registerPassword" type="password" placeholder="Password" class="sm:col-span-2 p-3 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-100 placeholder:text-slate-500" />
-          <button id="registerBtn" class="sm:col-span-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
+          <button id="registerBtn" class="sm:col-span-2 bg-fuchsia-500 hover:bg-fuchsia-400 text-slate-950 px-4 py-3 rounded-xl font-bold transition">
             Register
           </button>
         </div>
         <div class="mt-4 text-sm text-slate-300 flex flex-wrap items-center gap-x-2 gap-y-1">
           <span>Already have an account?</span>
-          <button id="showSignInBtn" class="text-emerald-300 hover:text-emerald-200 font-semibold underline underline-offset-4">
+          <button id="showSignInBtn" class="text-rose-300 hover:text-rose-200 font-semibold underline underline-offset-4">
             Back to sign in
           </button>
         </div>
@@ -126,7 +129,7 @@
           <h3 class="text-lg font-semibold mb-3">Legend</h3>
           <div class="grid grid-cols-1 gap-2 text-sm text-slate-300">
             <div class="flex items-center gap-3">
-              <div class="w-4 h-4 rounded-full bg-emerald-400"></div>
+              <div class="w-4 h-4 rounded-full bg-pink-400"></div>
               <span>Available</span>
             </div>
             <div class="flex items-center gap-3">

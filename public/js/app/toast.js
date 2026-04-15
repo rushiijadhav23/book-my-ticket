@@ -5,7 +5,7 @@ export function createToaster(toastHost) {
     const el = document.createElement("div");
     const colors =
       type === "success"
-        ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-100"
+        ? "bg-pink-500/15 border-pink-400/40 text-pink-100"
         : type === "error"
           ? "bg-rose-500/15 border-rose-400/40 text-rose-100"
           : "bg-slate-500/15 border-slate-400/40 text-slate-100";

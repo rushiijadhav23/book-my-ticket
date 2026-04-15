@@ -11,7 +11,7 @@ export function createMoviesView({ dom, state, toast, onSelectMovie }) {
       btn.className =
         "px-4 py-2 rounded-xl text-sm font-semibold border transition " +
         (active
-          ? "bg-purple-500/20 border-purple-400/40 text-purple-100"
+          ? "bg-pink-500/20 border-pink-400/40 text-pink-100"
           : "bg-slate-800/40 border-slate-700/60 text-slate-200 hover:bg-slate-700/50");
     });
   }
@@ -34,7 +34,7 @@ export function createMoviesView({ dom, state, toast, onSelectMovie }) {
       btn.className =
         "px-4 py-2 rounded-xl text-sm font-semibold border transition " +
         (state.movieId === movie.id
-          ? "bg-purple-500/20 border-purple-400/40 text-purple-100"
+          ? "bg-pink-500/20 border-pink-400/40 text-pink-100"
           : "bg-slate-800/40 border-slate-700/60 text-slate-200 hover:bg-slate-700/50");
 
       btn.onclick = () => {

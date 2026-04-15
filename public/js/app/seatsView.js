@@ -32,7 +32,7 @@ export function createSeatsView({ dom, state, toast, setBusy, onBooked }) {
           ? "bg-rose-500/10 border-rose-400/30 text-rose-200 cursor-not-allowed"
           : isSelected
             ? "bg-slate-500/40 border-slate-300/30 text-white"
-            : "bg-emerald-500/15 border-emerald-400/30 text-emerald-100 hover:bg-emerald-500/25");
+            : "bg-pink-500/15 border-pink-400/30 text-pink-100 hover:bg-pink-500/25");
 
       btn.textContent = seat.seat_number ?? "?";
 
