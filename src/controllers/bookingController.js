@@ -37,7 +37,7 @@ export const bookSeat = async (req, res) => {
     await conn.query("COMMIT");
     conn.release();
 
-    res.send({ message: "Seat booked successfully" });
+    res.status(201).send("Seat booked successfully");
 
   } catch (err) {
     await conn.query("ROLLBACK");

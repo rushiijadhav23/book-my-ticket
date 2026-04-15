@@ -43,7 +43,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      "secret"
+      process.env.JWT_SECRET
     );
 
     res.send({ token });
