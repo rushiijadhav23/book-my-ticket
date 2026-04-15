@@ -29,7 +29,7 @@ export function createSeatsView({ dom, state, toast, setBusy, onBooked }) {
       btn.className =
         "h-10 rounded-xl border text-sm font-bold transition " +
         (isBooked
-          ? "bg-rose-500/10 border-rose-400/30 text-rose-200 cursor-not-allowed"
+          ? "bg-slate-950/70 border-slate-500/30 text-slate-200 cursor-not-allowed"
           : isSelected
             ? "bg-slate-500/40 border-slate-300/30 text-white"
             : "bg-pink-500/15 border-pink-400/30 text-pink-100 hover:bg-pink-500/25");
