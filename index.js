@@ -33,11 +33,6 @@ app.get("/health", (req, res) => {
   res.status(200).json(healthResponse);
 });
 
-// Alias to support typo'd probes if configured externally.
-app.get("/heath", (req, res) => {
-  res.status(200).json(healthResponse);
-});
-
 const port = Number(process.env.PORT) || 8080;
 
 try {

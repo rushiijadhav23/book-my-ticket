@@ -1,4 +1,4 @@
-# Book My Ticket (ChaiCode Cinema)
+# Book My Ticket
 
 A simple **movie seat booking** app:
 
@@ -48,7 +48,25 @@ A simple **movie seat booking** app:
 
 Create a `.env` file (see `.env.example`):
 
+```bash
+# App
+PORT=8080
+NODE_ENV=development
 
+# Option A (Render / hosted Postgres)
+DATABASE_URL=
+DB_SSL=false
+
+# Option B (local Docker Postgres)
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+
+# JWT
+JWT_SECRET=
+```
 
 For Render, prefer `DATABASE_URL` and set `DB_SSL=true`.
 
@@ -65,10 +83,20 @@ Open:
 
 ### Database initialization behavior
 
-- On the **first** startup (fresh Docker volume), Postgres runs `db/init/001_init.sql`:
-  - Creates tables: `users`, `movies`, `seats`, `bookings`
-  - Seeds **3 movies** and **40 seats/movie**
-- On **every backend start**, the server runs a small idempotent migration (`src/config/migrate.js`) to keep the schema compatible (e.g. `users.first_name/last_name`).
+- On the **first** startup (fresh Docker volume), Postgres runs `db/init/001_init.sql`.
+- On **every backend start**, the server runs idempotent startup migrations (`src/config/migrate.js`) that:
+  - ensure required tables exist (`users`, `movies`, `seats`, `bookings`)
+  - keep schema compatibility (like `users.first_name/last_name`)
+  - seed default movies + seats if tables are empty
+
+### Render deployment notes
+
+- Set these env vars in your Render Web Service:
+  - `DATABASE_URL=<Render Postgres Internal Database URL>`
+  - `DB_SSL=true`
+  - `NODE_ENV=production`
+  - `JWT_SECRET=<your-secret>`
+- Do **not** use local URLs like `localhost` or Docker service hosts like `postgres` in Render.
 
 If you want a completely fresh DB:
 
