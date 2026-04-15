@@ -11,7 +11,7 @@ export const bookSeat = async (req, res) => {
 
     // Validate seat belongs to movie
     const result = await conn.query(
-      `SELECT * FROM seats 
+      `SELECT * FROM public.seats 
        WHERE id = $1 AND movie_id = $2 AND isbooked = 0 
        FOR UPDATE`,
       [seatId, movieId]
@@ -26,12 +26,12 @@ export const bookSeat = async (req, res) => {
     const seat = result.rows[0];
 
     await conn.query(
-      "UPDATE seats SET isbooked = 1, booked_by = $2 WHERE id = $1",
+      "UPDATE public.seats SET isbooked = 1, booked_by = $2 WHERE id = $1",
       [seatId, user.id]
     );
 
     await conn.query(
-      "INSERT INTO bookings (user_id, movie_id, seat_id) VALUES ($1, $2, $3)",
+      "INSERT INTO public.bookings (user_id, movie_id, seat_id) VALUES ($1, $2, $3)",
       [user.id, movieId, seatId]
     );
 
@@ -58,9 +58,9 @@ export const getMyBookings = async (req, res) => {
         m.name AS movie_name,
         s.seat_number,
         b.created_at
-      FROM bookings b
-      JOIN movies m ON b.movie_id = m.id
-      JOIN seats s ON b.seat_id = s.id
+      FROM public.bookings b
+      JOIN public.movies m ON b.movie_id = m.id
+      JOIN public.seats s ON b.seat_id = s.id
       WHERE b.user_id = $1
       ORDER BY b.created_at DESC`,
       [userId]

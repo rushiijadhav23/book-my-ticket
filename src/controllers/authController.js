@@ -9,7 +9,7 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(
-      "INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4)",
+      "INSERT INTO public.users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4)",
       [email, hashedPassword, firstName ?? null, lastName ?? null]
     );
 
@@ -25,7 +25,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     const result = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM public.users WHERE email = $1",
       [email]
     );
 
